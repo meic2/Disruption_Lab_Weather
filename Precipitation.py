@@ -3,7 +3,7 @@
 import datetime as dt  # Python standard library datetime  module
 import numpy as np
 import netCDF4  
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import pandas as pd
 
 
@@ -27,8 +27,8 @@ def transform_csv_from_netCDF(path_input, path_output):
     ix_set = set([])
     iy_set = set([])
 
-    lat = nc1.variables['lat'][:]
-    lon = nc1.variables['lon'][:]
+    lat = nc1.variables['latitude'][:]
+    lon = nc1.variables['latitude'][:]
     time_var = nc1.variables['time']
     dtime = netCDF4.num2date(time_var[:],time_var.units)
 
@@ -60,7 +60,7 @@ def transform_csv_from_netCDF(path_input, path_output):
         #istop = netCDF4.date2index(stop,time_var,select='nearest')
 
         # Get all time records of variable [vname] at indices [iy,ix]
-        vname = 'pr'
+        vname = 'tp'
         #vname = 'surf_el'
         var = nc1.variables[vname]
         #print(var.dimesions)
@@ -88,13 +88,14 @@ def transform_csv_from_netCDF(path_input, path_output):
             dict1.update({"date_mmddyy": datetime, "month": month, "year": year, "Lattitude": lon[ix],"Longtitude":lat[iy], "HHID": hhid_hhid, "rainfall": rain})
             res.append(dict1)
 
-
+    res_final = pd.DataFrame(res)
     res_final.to_csv(path_output, index = False)
 
 
 if __name__ == "__main__":
-    path_input = "pr_day_HadGEM2-CC_piControl_r1i1p1_20091201-20141130.nc"
-    path_output = "2010-2015_precipitation.csv"
+
+    path_input = "/Users/meichen/Box/ML Food Security/Raw Data/Precipitation/daily_precipitation/1999_tp.nc"
+    path_output = "/Users/meichen/Box/ML Food Security/Raw Data/Precipitation/1999_tp.csv"
     transform_csv_from_netCDF(path_input, path_output)
 
 
